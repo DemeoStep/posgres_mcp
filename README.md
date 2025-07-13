@@ -82,6 +82,25 @@ This server operates in **read-only mode** only. It:
 - Uses parameterized queries to prevent SQL injection
 - Validates all queries before execution
 
+## Testing
+
+### Quick Test
+```bash
+# Run complete test suite (includes security testing)
+npm run test:complete
+# or
+./test.sh
+```
+
+### Test Environment
+The project includes a comprehensive test environment with:
+- PostgreSQL 15.13 in Docker
+- Realistic e-commerce test data (74 records across 6 tables)
+- Security validation tests
+- Automated setup and cleanup
+
+See [test/README.md](test/README.md) for detailed testing documentation.
+
 ## Development
 
 ```bash
@@ -91,8 +110,11 @@ npm run dev
 # Build only
 npm run build
 
-# Run tests
-npm test
+# Test database connection
+npm run test-connection
+
+# Test security features
+npm run test-mcp-security
 ```
 
 ## Docker Management
@@ -115,6 +137,20 @@ npm run docker:reset
 
 # Complete test workflow
 npm run test:complete
+```
+
+## Project Structure
+
+```
+├── src/                    # Main source code
+│   └── index.ts           # MCP server implementation
+├── test/                  # Test infrastructure
+│   ├── docker/           # Docker environment
+│   ├── scripts/          # Test automation
+│   └── *.ts             # Test files
+├── dist/                 # Compiled JavaScript
+├── mcp-config.json       # MCP client configuration
+└── README.md            # This file
 ```
 
 ## License

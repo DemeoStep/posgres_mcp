@@ -65,21 +65,38 @@ class PostgreSQLMCPServer {
   private validateReadOnlyQuery(query: string): void {
     const normalizedQuery = query.trim().toLowerCase();
     
-    // List of forbidden operations
-    const forbiddenOperations = [
-      'insert', 'update', 'delete', 'drop', 'create', 'alter', 
-      'truncate', 'grant', 'revoke', 'commit', 'rollback'
+    // Remove comments and normalize whitespace
+    const cleanedQuery = normalizedQuery
+      .replace(/\/\*[\s\S]*?\*\//g, ' ')  // Remove /* */ comments
+      .replace(/--.*$/gm, ' ')            // Remove -- comments
+      .replace(/\s+/g, ' ')               // Normalize whitespace
+      .trim();
+    
+    // List of forbidden operation patterns (as separate words)
+    const forbiddenPatterns = [
+      /\binsert\s+into\b/,
+      /\bupdate\s+\w+\s+set\b/,
+      /\bdelete\s+from\b/,
+      /\bdrop\s+(table|database|schema|view|index)\b/,
+      /\bcreate\s+(table|database|schema|view|index)\b/,
+      /\balter\s+(table|database|schema)\b/,
+      /\btruncate\s+(table\s+)?\w+\b/,
+      /\bgrant\s+\w+/,
+      /\brevoke\s+\w+/,
+      /\bcommit\b/,
+      /\brollback\b/
     ];
 
-    // Check if query starts with forbidden operations
-    for (const operation of forbiddenOperations) {
-      if (normalizedQuery.startsWith(operation)) {
-        throw new Error(`Operation ${operation.toUpperCase()} is not allowed. This server only supports read-only operations.`);
+    // Check if query contains forbidden patterns
+    for (const pattern of forbiddenPatterns) {
+      if (pattern.test(cleanedQuery)) {
+        const match = cleanedQuery.match(pattern);
+        throw new Error(`Operation ${match?.[0].toUpperCase()} is not allowed. This server only supports read-only operations.`);
       }
     }
 
     // Must start with SELECT or WITH (for CTEs)
-    if (!normalizedQuery.startsWith('select') && !normalizedQuery.startsWith('with')) {
+    if (!cleanedQuery.startsWith('select') && !cleanedQuery.startsWith('with')) {
       throw new Error('Only SELECT queries and CTEs (WITH) are allowed.');
     }
   }

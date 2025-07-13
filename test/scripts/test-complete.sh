@@ -6,9 +6,13 @@ echo "🧪 PostgreSQL MCP Server - Complete Test Workflow"
 echo "================================================="
 echo ""
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
 # Step 1: Setup test database
 echo "📦 Step 1: Setting up test database..."
-./start-test-db.sh
+cd "$SCRIPT_DIR" && ./start-test-db.sh
 
 echo ""
 echo "⏳ Waiting for database to be fully ready..."
@@ -16,6 +20,7 @@ sleep 5
 
 # Step 2: Setup environment
 echo "🔧 Step 2: Setting up environment..."
+cd "$PROJECT_ROOT"
 if [ ! -f .env ]; then
     echo "📋 Copying test environment configuration..."
     cp .env.test .env
@@ -52,7 +57,7 @@ fi
 echo ""
 echo "📊 Step 5: Test Data Summary"
 echo "----------------------------"
-docker-compose exec postgres psql -U testuser -d testdb -c "
+cd "$PROJECT_ROOT/test/docker" && docker-compose exec postgres psql -U testuser -d testdb -c "
 SELECT 
     schemaname,
     relname as tablename,
@@ -60,6 +65,19 @@ SELECT
 FROM pg_stat_user_tables 
 ORDER BY schemaname, relname;
 "
+
+# Step 6: Test write protection
+echo ""
+echo "🛡️  Step 6: Testing Write Protection..."
+echo "--------------------------------------"
+cd "$PROJECT_ROOT" && npm run test-mcp-security
+
+if [ $? -eq 0 ]; then
+    echo "✅ Write protection test passed"
+else
+    echo "❌ Write protection test failed"
+    exit 1
+fi
 
 echo ""
 echo "🎯 Test Environment Ready!"
@@ -81,7 +99,7 @@ echo ""
 echo "🚀 Next Steps:"
 echo "  1. Configure your MCP client with mcp-config.json"
 echo "  2. Start MCP server: npm run dev"
-echo "  3. Test with sample queries from test-queries.sql"
+echo "  3. Test with sample queries from test/test-queries.sql"
 echo ""
 echo "💡 Useful Commands:"
 echo "  • View logs: docker-compose logs postgres"
@@ -93,12 +111,12 @@ echo "  • Check status: npm run docker:status"
 echo "  • Start pgAdmin: docker-compose --profile tools up -d pgadmin"
 echo ""
 
-# Step 6: Automatic cleanup
-echo "🧹 Step 6: Cleaning up test environment..."
+# Step 7: Automatic cleanup
+echo "🧹 Step 7: Cleaning up test environment..."
 echo "=========================================="
 echo ""
 echo "🛑 Stopping containers and cleaning up..."
-npm run docker:clean
+cd "$PROJECT_ROOT" && npm run docker:clean
 echo ""
 echo "✅ Cleanup completed. All containers, volumes, and networks removed."
 echo ""

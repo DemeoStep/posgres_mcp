@@ -8,14 +8,15 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsc && node dist/index.js",
-    "test": "jest",
     "test-connection": "tsc && node dist/test-connection.js",
-    "docker:start": "./start-test-db.sh",
-    "docker:stop": "docker-compose down",
-    "docker:clean": "./docker-cleanup.sh clean",
-    "docker:reset": "./docker-cleanup.sh reset",
-    "docker:status": "./docker-cleanup.sh status",
-    "test:complete": "./test-complete.sh"
+    "test-write-protection": "tsc && node dist/test-write-protection.js",
+    "test-mcp-security": "tsc && node dist/test-mcp-security.js",
+    "docker:start": "./test/scripts/start-test-db.sh",
+    "docker:stop": "cd test/docker && docker-compose down",
+    "docker:clean": "./test/scripts/docker-cleanup.sh clean",
+    "docker:reset": "./test/scripts/docker-cleanup.sh reset",
+    "docker:status": "./test/scripts/docker-cleanup.sh status",
+    "test:complete": "./test/scripts/test-complete.sh"
   },
   "keywords": [
     "mcp",

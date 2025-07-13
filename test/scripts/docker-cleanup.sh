@@ -6,6 +6,10 @@ echo "🧹 PostgreSQL MCP Server - Docker Cleanup"
 echo "=========================================="
 echo ""
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOCKER_DIR="$SCRIPT_DIR/../docker"
+
 # Function to show current Docker status
 show_status() {
     echo "📊 Current Docker Status:"
@@ -28,7 +32,7 @@ show_status() {
 # Function for soft cleanup (stop containers)
 soft_cleanup() {
     echo "🛑 Stopping containers..."
-    docker-compose down
+    cd "$DOCKER_DIR" && docker-compose down
     
     if [ $? -eq 0 ]; then
         echo "✅ Containers stopped successfully"
@@ -40,7 +44,7 @@ soft_cleanup() {
 # Function for hard cleanup (remove everything)
 hard_cleanup() {
     echo "🗑️  Performing hard cleanup (removing containers, volumes, and networks)..."
-    docker-compose down -v --remove-orphans
+    cd "$DOCKER_DIR" && docker-compose down -v --remove-orphans
     
     # Remove any dangling images
     echo "🖼️  Removing unused images..."
@@ -67,7 +71,7 @@ reset_and_restart() {
     hard_cleanup
     echo ""
     echo "🚀 Starting fresh environment..."
-    ./start-test-db.sh
+    "$SCRIPT_DIR/start-test-db.sh"
 }
 
 # Main menu

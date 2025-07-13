@@ -1,7 +1,5 @@
 # Docker Compose for PostgreSQL MCP Server Testing
 
-version: '3.8'
-
 services:
   postgres:
     build:
@@ -16,7 +14,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./docker/init-scripts:/docker-entrypoint-initdb.d:ro
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U testuser -d testdb"]
       interval: 10s

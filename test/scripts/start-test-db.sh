@@ -5,9 +5,13 @@
 echo "🐳 Setting up PostgreSQL Docker test environment..."
 echo ""
 
+# Get the directory where this script is located and navigate to docker directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOCKER_DIR="$SCRIPT_DIR/../docker"
+
 # Build and start PostgreSQL container
 echo "📦 Building PostgreSQL Docker image..."
-docker-compose up -d postgres
+cd "$DOCKER_DIR" && docker-compose up -d postgres
 
 echo ""
 echo "⏳ Waiting for PostgreSQL to be ready..."
