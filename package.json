@@ -1,0 +1,39 @@
+{
+  "name": "postgresql-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for PostgreSQL read-only operations",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js",
+    "test": "jest",
+    "test-connection": "tsc && node dist/test-connection.js",
+    "docker:start": "./start-test-db.sh",
+    "docker:stop": "docker-compose down",
+    "docker:clean": "./docker-cleanup.sh clean",
+    "docker:reset": "./docker-cleanup.sh reset",
+    "docker:status": "./docker-cleanup.sh status",
+    "test:complete": "./test-complete.sh"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "postgresql",
+    "database"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "dotenv": "^16.6.1",
+    "pg": "^8.11.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/pg": "^8.10.9",
+    "typescript": "^5.3.0"
+  }
+}

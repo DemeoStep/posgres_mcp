@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "postgresql": {
+      "command": "node",
+      "args": ["/Volumes/Ext/My projects/posgres_mcp/dist/index.js"],
+      "env": {
+        "POSTGRES_HOST": "localhost",
+        "POSTGRES_PORT": "5432",
+        "POSTGRES_DATABASE": "testdb",
+        "POSTGRES_USER": "testuser",
+        "POSTGRES_PASSWORD": "testpass",
+        "POSTGRES_SSL": "false"
+      }
+    }
+  }
+}
