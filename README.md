@@ -63,11 +63,7 @@ Add this to your MCP client configuration (e.g., `~/.config/claude-desktop/mcp.j
   "servers": {
     "postgresql": {
       "command": "node",
-      "args": ["-r", "dotenv/config", "/path/to/postgresql-mcp-server/dist/index.js"],
-      "cwd": "/path/to/postgresql-mcp-server",
-      "env": {
-        "DOTENV_CONFIG_PATH": ".env"
-      },
+      "args": ["path/to/mcp/server/start-server.cjs"],
       "type": "stdio"
     }
   }
@@ -120,20 +116,6 @@ npm run test-mcp-security
 ```
 
 **Note**: You only need to run `npm run build` when you modify the TypeScript source code. For normal usage with different database credentials, just update your `.env` file.
-
-## Project Structure
-
-```
-├── src/                    # Main source code
-│   └── index.ts           # MCP server implementation
-├── test/                  # Test infrastructure
-│   ├── docker/           # Docker environment
-│   ├── scripts/          # Test automation
-│   └── *.ts             # Test files
-├── dist/                 # Compiled JavaScript
-├── mcp-config.json       # MCP client configuration
-└── README.md            # This file
-```
 
 ## License
 

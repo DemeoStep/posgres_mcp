@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
+    "start:mcp": "node -r dotenv/config dist/index.js",
     "dev": "tsc && node dist/index.js",
     "test-connection": "tsc && node dist/test-connection.js",
     "test-write-protection": "tsc && node dist/test-write-protection.js",
