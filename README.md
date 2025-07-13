@@ -22,6 +22,8 @@ A Model Context Protocol (MCP) server that provides read-only access to PostgreS
    npm run build
    ```
 
+4. Configure your database connection (see Configuration section below)
+
 ## Configuration
 
 Create a `.env` file in the root directory with your PostgreSQL connection details:
@@ -54,25 +56,25 @@ The MCP server provides the following tools:
 
 ### Example MCP Client Configuration
 
-Add this to your MCP client configuration:
+Add this to your MCP client configuration (e.g., `~/.config/claude-desktop/mcp.json`):
 
 ```json
 {
-  "mcpServers": {
+  "servers": {
     "postgresql": {
       "command": "node",
-      "args": ["/path/to/postgresql-mcp-server/dist/index.js"],
+      "args": ["-r", "dotenv/config", "/path/to/postgresql-mcp-server/dist/index.js"],
+      "cwd": "/path/to/postgresql-mcp-server",
       "env": {
-        "POSTGRES_HOST": "localhost",
-        "POSTGRES_PORT": "5432",
-        "POSTGRES_DATABASE": "your_database",
-        "POSTGRES_USER": "your_username",
-        "POSTGRES_PASSWORD": "your_password"
-      }
+        "DOTENV_CONFIG_PATH": ".env"
+      },
+      "type": "stdio"
     }
   }
 }
 ```
+
+This configuration automatically loads environment variables from your project's `.env` file, keeping sensitive credentials out of the MCP configuration.
 
 ## Security
 
@@ -107,7 +109,7 @@ See [test/README.md](test/README.md) for detailed testing documentation.
 # Development mode (rebuild and run)
 npm run dev
 
-# Build only
+# Build only (required after code changes)
 npm run build
 
 # Test database connection
@@ -117,27 +119,7 @@ npm run test-connection
 npm run test-mcp-security
 ```
 
-## Docker Management
-
-```bash
-# Start test database
-npm run docker:start
-
-# Stop containers (keep data)
-npm run docker:stop
-
-# Check Docker status
-npm run docker:status
-
-# Clean everything (removes data)
-npm run docker:clean
-
-# Reset and restart fresh
-npm run docker:reset
-
-# Complete test workflow
-npm run test:complete
-```
+**Note**: You only need to run `npm run build` when you modify the TypeScript source code. For normal usage with different database credentials, just update your `.env` file.
 
 ## Project Structure
 
